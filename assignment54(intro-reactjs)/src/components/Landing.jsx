@@ -55,7 +55,7 @@ function Main() {
 function Card(props) {
   return (
     <>
-      <div className="h-[430px]  w-[300px] sm:w-[280px] md:w-[320px] lg:w-[320px]  mt-1">
+      <div className="h-[430px]  w-[300px] sm:w-[280px] md:w-[320px] lg:w-[320px]  mt-1 ">
         <img
           src={props.img}
           alt="product"
