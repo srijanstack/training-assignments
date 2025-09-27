@@ -3,10 +3,11 @@ import {  useState } from "react";
 
 function Landing(props) {
   const [query, setQuery] = useState("");
+  const [sort, setSort] = useState("");
   return (
     <>
       <Navbar setQuery={setQuery}/>
-      <Main data={props.data} query={query}/>
+      <Main data={props.data} query={query} sort={sort} setSort={setSort}/>
       <Footer />
     </>
   );
@@ -28,9 +29,16 @@ function Navbar({setQuery}) {
   );
 }
 
-function Main({data, query}) {
+function Main({data, query, sort, setSort}) {
 
-  const mainData = data.filter((item)=>item.name.toLowerCase().indexOf(query.toLowerCase()) !== -1);
+  let mainData = data.filter((item)=>item.name.toLowerCase().indexOf(query.toLowerCase()) !== -1);
+
+  if(sort ==='price'){
+    mainData = mainData.sort((a,b)=>a.price - b.price);
+  }
+  else if(sort ==='name'){
+    mainData = mainData.sort((a,b)=> a.name.toLowerCase() < b.name.toLowerCase() ?  -1: 1 );
+  }
 
   return (
     <>
@@ -38,13 +46,13 @@ function Main({data, query}) {
         <div className="w-[90%] h-[auto] my-10 bg-white ">
           <div className="h-[60px] pt-2 mt-2 mx-10 flex justify-end  ">
             <select
-              name=""
-              id=""
+              value={sort}
+              onChange={(e)=>setSort(e.target.value)}
               className="bg-[#ebebeb] h-[80%] w-[180px] rounded-xl p-1 border-0"
             >
-              <option value={""}>Sort by</option>
-              <option value={Price}>Price</option>
-              <option value={Name}>Name</option>
+              <option value=''>Default</option>
+              <option value='price'>Price</option>
+              <option value='name'>Name</option>
             </select>
           </div>
           <div className="h-[90%] w-full flex pb-10 px-5 flex-wrap gap-3 box-border ">
