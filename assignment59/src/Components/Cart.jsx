@@ -1,7 +1,7 @@
 function CartMain({ cart,setCart }) {
   return (
     <>
-      <div className="min-h-[100vh]  w-full bg-[#e0e0e0] flex items-center justify-center">
+      <div className="min-h-[100vh]  w-full bg-[#e0e0e0] flex items-center justify-center py-10">
         <div className=" w-[80%] bg-white flex flex-col items-center justify-center py-10">
           {cart.length !== 0 ? (
             <>

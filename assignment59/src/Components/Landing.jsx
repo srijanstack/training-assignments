@@ -23,7 +23,11 @@ function Main({ data, query, sort, setSort }) {
 
   if (sort === "price") {
     mainData = mainData.sort((a, b) => a.price - b.price);
-  } else if (sort === "name") {
+  } 
+  else if (sort === "price1") {
+    mainData = mainData.sort((a, b) => b.price - a.price);
+  } 
+  else if (sort === "name") {
     mainData = mainData.sort((a, b) =>
       a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1
     );
@@ -40,7 +44,8 @@ function Main({ data, query, sort, setSort }) {
               className="bg-[#ebebeb] h-[80%] w-[180px] rounded-xl p-1 border-0"
             >
               <option value="">Default</option>
-              <option value="price">Price</option>
+              <option value="price">Price:low to high</option>
+              <option value="price1">Price:high to low</option>
               <option value="name">Name</option>
             </select>
           </div>
