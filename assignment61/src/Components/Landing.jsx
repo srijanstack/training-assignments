@@ -35,7 +35,7 @@ function Main({ data, query, sort, setSort }) {
 
   return (
     <>
-      <div className="w-full h-[auto] lg:h-[auto] bg-backgrey flex justify-center items-center px-10">
+      <div className="w-full h-[auto] lg:h-[auto] bg-backgrey flex justify-center items-center px-10 flex-grow">
         <div className="w-[auto]  h-[auto] my-10 bg-white ">
           <div className="h-[60px] pt-2 mt-2 mx-10 flex justify-end  ">
             <select

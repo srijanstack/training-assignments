@@ -25,7 +25,8 @@ function Details({ setCart, cart }) {
       name: product.title,
       price: product.price,
       img: product.thumbnail,
-      quantity: quant,
+      quantity: +quant,
+      discount: +product.discountPercentage,
     };
 
     setCart((cart) => [...cart, newItem]);
@@ -47,17 +48,17 @@ function Details({ setCart, cart }) {
 
   if (!product)
     return (
-      <div className="h-10 flex items-center justify-center text-[1.2rem] bg-blue-700 text-white">
+      <div className="h-10 flex items-center justify-center text-[1.2rem] bg-blue-700 text-white ">
         Loading...
       </div>
     );
 
   return (
     <>
-      <div className="h-[700px] lg:h-[650px] w-full flex items-center justify-center bg-backgrey ">
+      <div className="h-[700px] lg:h-[650px] w-full flex items-center justify-center bg-backgrey flex-grow">
         <div className="h-[650px] w-[400px] sm:w-[450px] md:w-[600px] md:h-[650px] lg:h-[450px] lg:w-[1000px] border-2 border-black rounded-xl p-5 flex justify-around bg-white flex-col lg:flex-row gap-1">
           <img
-            className="lg:w-[45%] lg:h-full h-[55%] md:h-[60%]"
+            className="lg:w-[45%] lg:h-full h-[55%] "
             src={product.thumbnail}
             alt="product"
           />
