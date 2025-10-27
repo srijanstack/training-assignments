@@ -24,7 +24,12 @@ function Details({ setCart, cart }) {
   }, [sku]);
 
   function addToCart() {
-    setCart((cart) => ({ ...cart, [product.id]: quant }));
+    setCart((cart) => {
+      const updatedCart = { ...cart, [product.id]: quant };
+      localStorage.setItem("my-cart", JSON.stringify(updatedCart));
+      return updatedCart;
+    });
+
     setAdded(true);
   }
 

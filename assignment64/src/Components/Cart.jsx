@@ -4,18 +4,28 @@ import { useState } from "react";
 
 function CartMain({ cart, setCart }) {
   const cartKeys = Object.keys(cart);
-   const [productList, setProductList] = useState([]);
-    useEffect(()=>{
-        getData().then(products=>{setProductList(products)}).catch(()=>{console.log('cannot load')});
-    },[])
+  const [productList, setProductList] = useState([]);
+  useEffect(() => {
+    getData()
+      .then((products) => {
+        setProductList(products);
+      })
+      .catch(() => {
+        console.log("cannot load");
+      });
+  }, []);
   return (
     <>
       <div className="h-auto  w-full bg-backgrey flex items-center justify-center py-10 flex-grow">
         <div className="w-[95%] md:w-[80%] bg-white flex flex-col items-center justify-center py-10">
           {cartKeys.length !== 0 ? (
             <>
-              <CartItems cart={cart} setCart={setCart} productList={productList}/>
-              <CheckOut cart={cart} productList={productList}/>
+              <CartItems
+                cart={cart}
+                setCart={setCart}
+                productList={productList}
+              />
+              <CheckOut cart={cart} productList={productList} />
             </>
           ) : (
             <span>Cart is empty</span>
@@ -28,7 +38,6 @@ function CartMain({ cart, setCart }) {
 
 function CartItems({ cart, setCart, productList }) {
   const cartKeys = Object.keys(cart);
-
 
   return (
     <>
@@ -44,11 +53,17 @@ function CartItems({ cart, setCart, productList }) {
           </div>
         </div>
         {cartKeys.map((id) => {
-          const product = productList.find((p)=>p.id === +id);
-          if(!product) return null;
-          return(
-          <Items key={id} product={product} quantity={cart[id]} cart={cart} setCart={setCart} />
-          )
+          const product = productList.find((p) => p.id === +id);
+          if (!product) return null;
+          return (
+            <Items
+              key={id}
+              product={product}
+              quantity={cart[id]}
+              cart={cart}
+              setCart={setCart}
+            />
+          );
         })}
         <div className="h-[50px] bg-white lg:w-[65vw] md:w-[70vw] w-[90vw] sm:w-[90vw] flex items-center border border-[#c0c0c0] px-2 justify-between">
           <div className="items-center flex gap-1 h-full">
@@ -69,11 +84,14 @@ function CartItems({ cart, setCart, productList }) {
   );
 }
 
-function Items({  product,  quantity, cart, setCart }) {
+function Items({ product, quantity, cart, setCart }) {
   function deleteItem(deleteid) {
-    const updatedCart = {...cart};
+    const updatedCart = { ...cart };
     delete updatedCart[deleteid];
-    setCart(updatedCart);
+    setCart(() => {
+      localStorage.setItem("my-cart", JSON.stringify(updatedCart));
+      return updatedCart;
+    });
   }
   return (
     <>
@@ -86,8 +104,14 @@ function Items({  product,  quantity, cart, setCart }) {
             X
           </div>
           <div className="h-full  flex items-center w-[90%] pl-2 sm: gap-20">
-            <img src={product.thumbnail} alt="item" className="h-[75%] w-[50px]" />
-            <span className="text-[#ff4848] font-semibold">{product.title}</span>
+            <img
+              src={product.thumbnail}
+              alt="item"
+              className="h-[75%] w-[50px]"
+            />
+            <span className="text-[#ff4848] font-semibold">
+              {product.title}
+            </span>
           </div>
         </div>
         <div className="h-full w-full sm:w-[35%] flex justify-around sm:justify-between items-center">
@@ -108,12 +132,12 @@ function CheckOut({ cart, productList }) {
   let discount = 0;
 
   for (let id in cart) {
-    const product = productList.find((p)=>p.id===+id);
-    if(!product) continue;
+    const product = productList.find((p) => p.id === +id);
+    if (!product) continue;
     const qty = cart[id];
-    
+
     total += product.price * qty;
-    discount += (product.price * (product.discountPercentage / 100)) * qty;
+    discount += product.price * (product.discountPercentage / 100) * qty;
   }
   total = total.toFixed(2);
   discount = discount.toFixed(2);
@@ -135,7 +159,9 @@ function CheckOut({ cart, productList }) {
           </div>
           <div className="h-[40%] border-b border-[#c0c0c0] flex items-center justify-between">
             <span>Total</span>
-            <span className="font-semibold">${(total-discount).toFixed(2)}</span>
+            <span className="font-semibold">
+              ${(total - discount).toFixed(2)}
+            </span>
           </div>
         </div>
         <button className="h-[20%] w-[85%] bg-[#ff4848] rounded-md mt-5">
