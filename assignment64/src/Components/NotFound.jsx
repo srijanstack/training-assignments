@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 
-
 function NotFound(){
     return(<>
     <div className="h-[700px] lg:h-[650px] w-full flex  flex-col gap-5 items-center justify-center bg-backgrey flex-grow">

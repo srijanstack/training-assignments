@@ -10,7 +10,7 @@ import NotFound from "./Components/NotFound";
 function App() {
 
     const [query, setQuery] = useState("");
-    const [cart, setCart] = useState([]);
+    const [cart, setCart] = useState({});
 
 
 
@@ -18,7 +18,7 @@ function App() {
     <>
     <div className="min-h-screen flex flex-col">
     
-    <Navbar setQuery={setQuery}/>
+    <Navbar setQuery={setQuery} cart={cart}/>
 
     
     <Routes>
