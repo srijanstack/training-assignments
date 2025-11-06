@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { memo } from "react";
 
 function NotFound(){
     return(<>
@@ -9,4 +10,4 @@ function NotFound(){
     
     </>)
 }
-export default NotFound;
+export default memo(NotFound);

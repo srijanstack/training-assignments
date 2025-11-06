@@ -1,11 +1,13 @@
 import { Link } from "react-router-dom";
 import { AiOutlineShoppingCart } from "react-icons/ai";
+import { memo, useMemo } from "react";
 
 function Navbar({ setQuery, cart }) {
 
-    const totalItem = Object.values(cart).reduce((object, current) => 
-      object + current
-    , 0);
+  const totalItem = useMemo(() => {
+  return Object.values(cart).reduce((a, c) => a + c, 0);
+}, [cart]);
+
   
 
   return (
@@ -36,4 +38,4 @@ function Navbar({ setQuery, cart }) {
   );
 }
 
-export default Navbar;
+export default memo(Navbar);

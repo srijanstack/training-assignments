@@ -1,10 +1,10 @@
 import { useEffect } from "react";
 import { getProduct } from "../Api";
-import { useState } from "react";
+import { useState, useMemo, memo, useCallback } from "react";
 
 function CartMain({ cart, setCart }) {
-      const [products, setProducts] = useState([]);
-      const cartKeys = Object.keys(cart);
+  const [products, setProducts] = useState([]);
+  const cartKeys = useMemo(()=>Object.keys(cart),[cart]);
   useEffect(() => {
     const promise = cartKeys.map((id) => getProduct(id));
     const bigPromise = Promise.all(promise);
@@ -32,6 +32,14 @@ function CartMain({ cart, setCart }) {
 }
 
 function CartItems({ cart, setCart, productList }) {
+  const deleteItem = useCallback((deleteId) => {
+  setCart((prevCart) => {
+    const updatedCart = { ...prevCart };
+    delete updatedCart[deleteId];
+    localStorage.setItem("my-cart", JSON.stringify(updatedCart));
+    return updatedCart;
+  });
+}, [setCart]);
   return (
     <>
       <div className="flex flex-col">
@@ -54,6 +62,7 @@ function CartItems({ cart, setCart, productList }) {
               quantity={cart[product.id]}
               cart={cart}
               setCart={setCart}
+              deleteItem={deleteItem}
             />
           );
         })}
@@ -76,15 +85,8 @@ function CartItems({ cart, setCart, productList }) {
   );
 }
 
-function Items({ product, quantity, cart, setCart }) {
-  function deleteItem(deleteid) {
-    const updatedCart = { ...cart };
-    delete updatedCart[deleteid];
-    setCart(() => {
-      localStorage.setItem("my-cart", JSON.stringify(updatedCart));
-      return updatedCart;
-    });
-  }
+const Items = memo(({ product, quantity, deleteItem })=> {
+
   return (
     <>
       <div className="h-[150px] sm:h-[60px] lg:w-[65vw] md:w-[70vw] w-[90vw] sm:w-[90vw] flex flex-col sm:flex-row items-center border-t border-l border-r border-[#c0c0c0]">
@@ -117,22 +119,24 @@ function Items({ product, quantity, cart, setCart }) {
       </div>
     </>
   );
-}
+});
 
 function CheckOut({ cart, productList }) {
-  let total = 0;
-  let discount = 0;
-
+const { total, discount } = useMemo(() => {
+  let totalCalc = 0;
+  let discountCalc = 0;
   for (let id in cart) {
     const product = productList.find((p) => p.id === +id);
     if (!product) continue;
     const qty = cart[id];
-
-    total += product.price * qty;
-    discount += product.price * (product.discountPercentage / 100) * qty;
+    totalCalc += product.price * qty;
+    discountCalc += product.price * (product.discountPercentage / 100) * qty;
   }
-  total = total.toFixed(2);
-  discount = discount.toFixed(2);
+  return {
+    total: totalCalc.toFixed(2),
+    discount: discountCalc.toFixed(2),
+  };
+}, [cart, productList]);
 
   return (
     <>

@@ -1,5 +1,6 @@
 
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { memo } from "react";
 
 function Loading(){
     return(
@@ -7,4 +8,4 @@ function Loading(){
     )
 }
 
-export default Loading;
+export default memo(Loading);

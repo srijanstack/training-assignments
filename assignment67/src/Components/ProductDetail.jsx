@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { getProduct } from "../Api";
 import { useParams } from "react-router-dom";
 import { AiOutlineArrowRight, AiOutlineArrowLeft } from "react-icons/ai";
@@ -23,7 +23,13 @@ function Details({ setCart, cart }) {
     setAdded(false);
   }, [sku]);
 
-  function addToCart() {
+  const increment = useCallback(() => {
+  setQuant(q => q + 1);
+  setAdded(false);
+}, []);
+
+  const  addToCart = useCallback(()=> {
+    if(!product) return;
     setCart((cart) => {
       const updatedCart = { ...cart, [product.id]: quant };
       localStorage.setItem("my-cart", JSON.stringify(updatedCart));
@@ -31,7 +37,7 @@ function Details({ setCart, cart }) {
     });
 
     setAdded(true);
-  }
+  }, [product, quant, setCart])
 
   useEffect(() => {
     if (product && cart[product.id]) {
@@ -67,10 +73,7 @@ function Details({ setCart, cart }) {
                   <h1 className="w-[50%] text-center">{quant}</h1>
                   <h1
                     className="border border-[#d2d2d2]  w-[50%]  h-6 flex justify-center items-center hover:cursor-pointer rounded-md"
-                    onClick={() => {
-                      setQuant(quant + 1);
-                      setAdded(false);
-                    }}
+                    onClick={increment}
                   >
                     +
                   </h1>
