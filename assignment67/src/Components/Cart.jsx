@@ -1,31 +1,26 @@
 import { useEffect } from "react";
-import { getData } from "../Api";
+import { getProduct } from "../Api";
 import { useState } from "react";
 
 function CartMain({ cart, setCart }) {
-  const cartKeys = Object.keys(cart);
-  const [productList, setProductList] = useState([]);
+      const [products, setProducts] = useState([]);
+      const cartKeys = Object.keys(cart);
   useEffect(() => {
-    getData()
-      .then((products) => {
-        setProductList(products);
-      })
-      .catch(() => {
-        console.log("cannot load");
-      });
-  }, []);
+    const promise = cartKeys.map((id) => getProduct(id));
+    const bigPromise = Promise.all(promise);
+    bigPromise
+      .then((p) => setProducts(p))
+      .catch(console.log("Could not fetch data"));
+  }, [cart]);
+
   return (
     <>
       <div className="h-auto  w-full bg-backgrey flex items-center justify-center py-10 flex-grow">
         <div className="w-[95%] md:w-[80%] bg-white flex flex-col items-center justify-center py-10">
           {cartKeys.length !== 0 ? (
             <>
-              <CartItems
-                cart={cart}
-                setCart={setCart}
-                productList={productList}
-              />
-              <CheckOut cart={cart} productList={productList} />
+              <CartItems cart={cart} setCart={setCart} productList={products} />
+              <CheckOut cart={cart} productList={products} />
             </>
           ) : (
             <span>Cart is empty</span>
@@ -37,13 +32,11 @@ function CartMain({ cart, setCart }) {
 }
 
 function CartItems({ cart, setCart, productList }) {
-  const cartKeys = Object.keys(cart);
-
   return (
     <>
       <div className="flex flex-col">
         <div className="h-[50px] bg-[#f7f7f7] lg:w-[65vw] w-[90vw] md:w-[70vw] sm:-[90vw] flex items-center border-t  border-l border-r border-[#c0c0c0]">
-          <div className="h-full w-[60%]  flex justify-center items-center">
+          <div className="h-full w-[60%] flex justify-center items-center">
             <span>Product</span>
           </div>
           <div className="h-full w-[35%] hidden sm:flex justify-between items-center">
@@ -52,14 +45,13 @@ function CartItems({ cart, setCart, productList }) {
             <span>Subtotal</span>
           </div>
         </div>
-        {cartKeys.map((id) => {
-          const product = productList.find((p) => p.id === +id);
+        {productList.map((product) => {
           if (!product) return null;
           return (
             <Items
-              key={id}
+              key={product.id}
               product={product}
-              quantity={cart[id]}
+              quantity={cart[product.id]}
               cart={cart}
               setCart={setCart}
             />
