@@ -75,7 +75,7 @@ function Login() {
             </div>
           </div>
           <div className="h-[25%] flex flex-col justify-between">
-            <Button className="text-[blue] font-semibold mt-5" >Login</Button>
+            <Button className="text-[blue] font-semibold mt-5"  type='submit'>Login</Button>
             <p className="text-gray-300 hover:underline text-[0.9rem] self-end mt-1">
               Forgot Password?
             </p>
@@ -89,7 +89,7 @@ function Login() {
   );
 }
 
-export function Button({ children, className, type='button', onClick}) {
+export function Button({ children, className, type, onClick}) {
   return (
     <>
       <button

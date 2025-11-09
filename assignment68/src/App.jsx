@@ -7,6 +7,7 @@ import { useState } from "react";
 import CartMain from "./Components/Cart";
 import NotFound from "./Components/NotFound";
 import Login from "./Components/Login";
+import SignUp from "./Components/Signup";
 
 function App() {
   const [query, setQuery] = useState("");
@@ -29,10 +30,14 @@ function App() {
           <Route
             path="/cart"
             element={<CartMain cart={cart} setCart={setCart} />}
-          />
+          / >
           <Route 
             path="/login" 
             element={<Login />} 
+          />
+          <Route 
+            path="/signup" 
+            element={<SignUp />} 
           />
           <Route path="*" element={<NotFound />} />
         </Routes>
