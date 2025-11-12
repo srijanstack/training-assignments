@@ -70,13 +70,13 @@ function CartItems({ cart, setCart, productList }) {
           <div className="items-center flex gap-1 h-full">
             <input
               placeholder="Coupon Code"
-              className="w-[120px] sm:w-[150px] md:w-[200px] h-[80%] border bg-white  border-[#c0c0c0] p-2"
+              className="w-[100px] text-sm sm:text-md sm:w-[150px] md:w-[200px] h-[80%] border bg-white  border-[#c0c0c0] p-2"
             />
-            <div className="w-[120px] sm:w-[150px] md:w-[200px] h-[80%] bg-[#ff4848]  text-white p-2 flex items-center justify-center ">
+            <div className="w-[100px] text-sm sm:text-md sm:w-[150px] md:w-[200px] h-[80%] bg-[#ff4848]  text-white p-2 flex items-center justify-center ">
               <span>Apply Coupon</span>
             </div>
           </div>
-          <button className="w-[120px] sm:w-[150px] md:w-[200px] h-[80%] bg-[#ff4848]  text-white p-2 flex items-center justify-center">
+          <button className="w-[100px] text-sm sm:text-md sm:w-[150px] md:w-[200px] h-[80%] bg-[#ff4848]  text-white p-2 flex items-center justify-center">
             Update Cart
           </button>
         </div>

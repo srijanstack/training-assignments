@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import { AiOutlineArrowRight, AiOutlineArrowLeft } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import Loading from "./Loading";
+import { Button } from "./Login";
 
 function Details({ setCart, cart }) {
   const [quant, setQuant] = useState(1);
@@ -50,9 +51,9 @@ function Details({ setCart, cart }) {
 
   return (
     <>
-      <div className="h-[80%] lg:h-[650px] w-full  flex items-center justify-center bg-backgrey flex-grow my-5">
+      <div className="h-[auto] lg:h-[650px] w-full  flex items-center justify-center bg-backgrey flex-grow py-5">
         {!loading ? (
-          <div className="h-[90%] w-[400px] sm:w-[450px] md:w-[600px] md:h-[650px] lg:h-[450px] lg:w-[1000px] border-2 border-black rounded-xl p-5 flex justify-around bg-white flex-col lg:flex-row gap-1">
+          <div className="h-[90%] w-[80vw] sm:w-[450px] md:w-[600px] md:h-[650px] lg:h-[450px] lg:w-[1000px] border-2 border-black rounded-xl p-5 flex justify-around bg-white flex-col lg:flex-row gap-1">
             <img
               className="lg:w-[45%] lg:h-full h-[55%] "
               src={product.thumbnail}

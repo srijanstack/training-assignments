@@ -56,7 +56,7 @@ function Main({ data, query, sort, setSort, loading }) {
         {!loading ? (
           <div className="w-[auto]  h-[auto] my-10 bg-white ">
             <Sort sort={sort} setSort={setSort}  />
-            <div className="h-[90%] w-full grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 pb-10 px-5  gap-3 box-border ">
+            <div className="h-[90%] w-full grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 pb-10 px-5  gap-4 box-border ">
             {sortedData.map((item, index) => (
                 <Card
                   key={index}
@@ -80,7 +80,7 @@ function Main({ data, query, sort, setSort, loading }) {
 const Card = memo((props) => {
   return (
     <>
-      <div className="h-[430px]  w-[300px] sm:w-[280px]  lg:w-[320px]  mt-1 flex flex-col items-center">
+      <div className="h-[430px]  w-[300px] sm:w-[45vw] md:w-[30vw] lg:w-[22vw]  mt-1 flex flex-col items-center">
         <img src={props.img} alt="product" className="p-3 h-[80%] w-full" />
         <div className="w-full px-3 flex flex-col">
           <p className="text-[0.8rem] text-[#b3b3b3]">{props.category}</p>

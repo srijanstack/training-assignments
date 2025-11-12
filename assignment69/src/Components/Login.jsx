@@ -3,10 +3,10 @@ import { BiCartDownload } from "react-icons/bi";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { Link } from "react-router-dom";
-import Input from "./FormInput";
+import {FormikInput} from "./FormInput";
 
 function Login() {
-  function handleLogin() {
+  function handleLogin(values) {
     console.log("user logged in", values.username, values.password);
   }
 
@@ -32,7 +32,7 @@ function Login() {
           <Form className="min-h-[80vh] min-w-[80vw] bg-[blue] bg-cover flex flex-col items-center py-4 gap-2 rounded-3xl justify-around">
             <BiCartDownload className="text-white text-9xl " />
             <div className="h-[30%] flex flex-col justify-center gap-3 ">
-              <Input
+              <FormikInput
                 id="usrnme"
                 type="text"
                 name="username"
@@ -42,7 +42,7 @@ function Login() {
                 required
               />
 
-              <Input
+              <FormikInput
                 id="pswrd"
                 type="password"
                 name="password"
@@ -77,10 +77,7 @@ export function Button({ children, className, disabled, ...rest }) {
   return (
     <>
       <button
-        className={`h-10 w-[60] sm:w-75 bg-white flex items-center justify-center rounded-md ${className} 
-    ${disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}
-    outline-0 hover:bg-[#e3e3e3]"
-  `}
+        className={"h-10 w-[60] sm:w-75 bg-white flex items-center justify-center rounded-md hover:bg-gray-200 cursor-pointer focus:border-2 focus:border-black " + className}
         {...rest}
       >
         {children}

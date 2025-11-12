@@ -4,10 +4,10 @@ import * as Yup from "yup";
 import { Link } from "react-router-dom";
 import { MdAlternateEmail } from "react-icons/md";
 import { Button } from "./Login";
-import Input from "./FormInput";
+import {FormikInput} from "./FormInput";
 
 function Forgor() {
-  function handleForgor() {
+  function handleForgor(values) {
     console.log("user forgor", values.email);
   }
 
@@ -29,7 +29,7 @@ function Forgor() {
             <BiCartDownload className="text-white text-9xl " />
             <div className="flex flex-col gap-4 ">
               <h1 className="text-white text-3xl">Send code to your email.</h1>
-              <Input
+              <FormikInput
                 type="email"
                 name="email"
                 placeholder="email"

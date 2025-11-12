@@ -5,7 +5,7 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { Link } from "react-router-dom";
 import { Button } from "./Login";
-import Input from "./FormInput";
+import { FormikInput } from "./FormInput";
 
 function SignUp() {
   function handleSignup(values) {
@@ -57,7 +57,7 @@ function SignUp() {
           <Form className="min-h-[80vh]  min-w-[80vw] bg-[blue] bg-cover flex flex-col items-center py-4 gap-2 rounded-3xl justify-around">
             <BiCartDownload className="text-white text-9xl " />
             <div className="h-[30%] flex flex-col justify-center gap-3 ">
-              <Input
+              <FormikInput
                 type="text"
                 name="fullName"
                 placeholder="full name"
@@ -66,7 +66,7 @@ function SignUp() {
                 Icon={CiChat1}
               />
 
-              <Input
+              <FormikInput
                 type="email"
                 name="email"
                 placeholder="email"
@@ -74,7 +74,7 @@ function SignUp() {
                 id="email"
                 Icon={MdAlternateEmail}
               />
-              <Input
+              <FormikInput
                 type="text"
                 name="userName"
                 placeholder="username"
@@ -83,7 +83,7 @@ function SignUp() {
                 Icon={CiUser}
               />
 
-              <Input
+              <FormikInput
                 type="password"
                 name="passWord"
                 placeholder="password"
@@ -91,7 +91,7 @@ function SignUp() {
                 label="password"
                 Icon={CiLock}
               />
-              <Input
+              <FormikInput
                 type="password"
                 name="confirmPassword"
                 placeholder="confirm password"
