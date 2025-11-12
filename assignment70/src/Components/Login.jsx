@@ -56,9 +56,11 @@ function Login() {
               <Button className="text-[blue] font-semibold mt-5" type="submit">
                 Login
               </Button>
-              <p className="text-gray-300 hover:underline text-[0.9rem] self-end mt-1 cursor-pointer">
+              
+              <Link to='/forgot' className="text-gray-300 hover:underline text-[0.9rem] self-end mt-1 cursor-pointer">
                 Forgot Password?
-              </p>
+             
+              </Link>
               <p className="text-[#e7e0e0] text-[0.9rem] self-start mt-5 ">
                 Dont have an account?
                 <Link to="/signup" className="text-gray-300 hover:underline">
