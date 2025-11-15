@@ -4,6 +4,7 @@ import { useState, useMemo, memo, useCallback, useRef } from "react";
 
 function CartMain({ cart, setCart }) {
   const [products, setProducts] = useState([]);
+  const [localCart, setLocalCart] = useState(cart);
   const cartKeys = useMemo(() => Object.keys(cart), [cart]);
   useEffect(() => {
     const promise = cartKeys.map((id) => getProduct(id));
@@ -19,8 +20,8 @@ function CartMain({ cart, setCart }) {
         <div className="w-[95%] md:w-[80%] bg-white flex flex-col items-center justify-center py-10">
           {cartKeys.length !== 0 ? (
             <>
-              <CartItems cart={cart} setCart={setCart} productList={products} />
-              <CheckOut cart={cart} productList={products} />
+              <CartItems cart={localCart} setCart={setLocalCart} productList={products} updateCart={setCart}/>
+              <CheckOut cart={localCart} productList={products} />
             </>
           ) : (
             <span>Cart is empty</span>
@@ -31,10 +32,10 @@ function CartMain({ cart, setCart }) {
   );
 }
 
-function CartItems({ cart, setCart, productList }) {
+function CartItems({ cart, updateCart, setCart ,productList }) {
   const deleteItem = useCallback(
     (deleteId) => {
-      setCart((prevCart) => {
+      updateCart((prevCart) => {
         const updatedCart = { ...prevCart };
         delete updatedCart[deleteId];
         localStorage.setItem("my-cart", JSON.stringify(updatedCart));
@@ -69,7 +70,7 @@ function CartItems({ cart, setCart, productList }) {
             />
           );
         })}
-        <CouponRow cart={cart} />
+        <CouponRow cart={cart} updateCart={updateCart}/>
       </div>
     </>
   );
@@ -171,10 +172,11 @@ function CheckOut({ cart, productList }) {
   );
 }
 
-function CouponRow({ cart }) {
+function CouponRow({ cart, updateCart }) {
   const [disable, setDisable] = useState(true);
   const isFirstRender = useRef(true);
   function handleUpdate() {
+    updateCart(cart);
     localStorage.setItem("my-cart", JSON.stringify(cart));
     console.log("h");
     setDisable(true);
