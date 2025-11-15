@@ -1,10 +1,10 @@
 import { useEffect } from "react";
 import { getProduct } from "../Api";
-import { useState, useMemo, memo, useCallback } from "react";
+import { useState, useMemo, memo, useCallback, useRef } from "react";
 
 function CartMain({ cart, setCart }) {
   const [products, setProducts] = useState([]);
-  const cartKeys = useMemo(()=>Object.keys(cart),[cart]);
+  const cartKeys = useMemo(() => Object.keys(cart), [cart]);
   useEffect(() => {
     const promise = cartKeys.map((id) => getProduct(id));
     const bigPromise = Promise.all(promise);
@@ -32,14 +32,17 @@ function CartMain({ cart, setCart }) {
 }
 
 function CartItems({ cart, setCart, productList }) {
-  const deleteItem = useCallback((deleteId) => {
-  setCart((prevCart) => {
-    const updatedCart = { ...prevCart };
-    delete updatedCart[deleteId];
-    localStorage.setItem("my-cart", JSON.stringify(updatedCart));
-    return updatedCart;
-  });
-}, [setCart]);
+  const deleteItem = useCallback(
+    (deleteId) => {
+      setCart((prevCart) => {
+        const updatedCart = { ...prevCart };
+        delete updatedCart[deleteId];
+        localStorage.setItem("my-cart", JSON.stringify(updatedCart));
+        return updatedCart;
+      });
+    },
+    [setCart]
+  );
   return (
     <>
       <div className="flex flex-col">
@@ -66,26 +69,18 @@ function CartItems({ cart, setCart, productList }) {
             />
           );
         })}
-        <div className="h-[50px] bg-white lg:w-[65vw] md:w-[70vw] w-[90vw] sm:w-[90vw] flex items-center border border-[#c0c0c0] px-2 justify-between">
-          <div className="items-center flex gap-1 h-full">
-            <input
-              placeholder="Coupon Code"
-              className="w-[100px] text-sm sm:text-md sm:w-[150px] md:w-[200px] h-[80%] border bg-white  border-[#c0c0c0] p-2"
-            />
-            <div className="w-[100px] text-sm sm:text-md sm:w-[150px] md:w-[200px] h-[80%] bg-[#ff4848]  text-white p-2 flex items-center justify-center ">
-              <span>Apply Coupon</span>
-            </div>
-          </div>
-          <button className="w-[100px] text-sm sm:text-md sm:w-[150px] md:w-[200px] h-[80%] bg-[#ff4848]  text-white p-2 flex items-center justify-center">
-            Update Cart
-          </button>
-        </div>
+        <CouponRow cart={cart} />
       </div>
     </>
   );
 }
 
-const Items = memo(({ product, quantity, deleteItem })=> {
+const Items = memo(({ cart, setCart, product, quantity, deleteItem }) => {
+  function handleQunatity(e) {
+    const newQuant = +e.target.value;
+    const newCart = { ...cart, [product.id]: newQuant };
+    setCart(newCart);
+  }
 
   return (
     <>
@@ -111,10 +106,18 @@ const Items = memo(({ product, quantity, deleteItem })=> {
         <div className="h-full w-full sm:w-[35%] flex justify-around sm:justify-between items-center">
           <span className="font-semibold">${product.price}</span>
 
-          <div className="h-[50%] w-[40px] rounded-xl border border-[#d2d2d2] flex items-center justify-center text-[0.8rem] text-[#2b2b2b]">
-            <span>{quantity}</span>
-          </div>
-          <span className="font-semibold">${product.price * quantity}</span>
+          <input
+            className="h-[50%] w-[50px] rounded-xl border border-[#d2d2d2] flex items-center justify-center text-[0.8rem] text-[#2b2b2b] p-2"
+            type="number"
+            onChange={handleQunatity}
+            min={1}
+            max={99}
+            value={quantity}
+          />
+
+          <span className="font-semibold">
+            ${(product.price * quantity).toFixed(2)}
+          </span>
         </div>
       </div>
     </>
@@ -122,21 +125,21 @@ const Items = memo(({ product, quantity, deleteItem })=> {
 });
 
 function CheckOut({ cart, productList }) {
-const { total, discount } = useMemo(() => {
-  let totalCalc = 0;
-  let discountCalc = 0;
-  for (let id in cart) {
-    const product = productList.find((p) => p.id === +id);
-    if (!product) continue;
-    const qty = cart[id];
-    totalCalc += product.price * qty;
-    discountCalc += product.price * (product.discountPercentage / 100) * qty;
-  }
-  return {
-    total: totalCalc.toFixed(2),
-    discount: discountCalc.toFixed(2),
-  };
-}, [cart, productList]);
+  const { total, discount } = useMemo(() => {
+    let totalCalc = 0;
+    let discountCalc = 0;
+    for (let id in cart) {
+      const product = productList.find((p) => p.id === +id);
+      if (!product) continue;
+      const qty = cart[id];
+      totalCalc += product.price * qty;
+      discountCalc += product.price * (product.discountPercentage / 100) * qty;
+    }
+    return {
+      total: +totalCalc.toFixed(2),
+      discount: +discountCalc.toFixed(2),
+    };
+  }, [cart, productList]);
 
   return (
     <>
@@ -162,6 +165,47 @@ const { total, discount } = useMemo(() => {
         </div>
         <button className="h-[20%] w-[85%] bg-[#ff4848] rounded-md mt-5">
           <span className="text-white">Procced to Checkout</span>
+        </button>
+      </div>
+    </>
+  );
+}
+
+function CouponRow({ cart }) {
+  const [disable, setDisable] = useState(true);
+  const isFirstRender = useRef(true);
+  function handleUpdate() {
+    localStorage.setItem("my-cart", JSON.stringify(cart));
+    console.log("h");
+    setDisable(true);
+  }
+
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return; // skip first run
+    }
+    setDisable(false);
+  }, [cart]);
+
+  return (
+    <>
+      <div className="h-[50px] bg-white lg:w-[65vw] md:w-[70vw] w-[90vw] sm:w-[90vw] flex items-center border border-[#c0c0c0] px-2 justify-between">
+        <div className="items-center flex gap-1 h-full">
+          <input
+            placeholder="Coupon Code"
+            className="w-[100px] text-sm sm:text-md sm:w-[150px] md:w-[200px] h-[80%] border bg-white  border-[#c0c0c0] p-2"
+          />
+          <button className="w-[100px] text-sm sm:text-md sm:w-[150px] lg:w-[200px] h-[80%] bg-[#ff4848]  text-white p-2 flex items-center justify-center ">
+            <span>Apply Coupon</span>
+          </button>
+        </div>
+        <button
+          className="w-[100px] text-sm sm:text-md sm:w-[150px] lg::w-[200px] h-[80%] bg-[#ff4848]  text-white p-2 flex items-center justify-center cursor-pointer disabled:cursor-not-allowed disabled:bg-gray-200"
+          onClick={handleUpdate}
+          disabled={disable}
+        >
+          Update Cart
         </button>
       </div>
     </>

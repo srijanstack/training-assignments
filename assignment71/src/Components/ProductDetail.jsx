@@ -24,8 +24,9 @@ function Details({ setCart, cart }) {
     setAdded(false);
   }, [sku]);
 
-  const increment = useCallback(() => {
-  setQuant(q => q + 1);
+  const handleQunatity = useCallback((e) => {
+  const newQuant = +e.target.value;
+  setQuant(newQuant);
   setAdded(false);
 }, []);
 
@@ -70,14 +71,16 @@ function Details({ setCart, cart }) {
                 {product.description}
               </p>
               <div className="mt-6 flex w-full gap-2">
-                <div className="flex w-[18%] lg:h-[35px] h-[45px] justify-between border border-black p-1 items-center rounded-md">
-                  <h1 className="w-[50%] text-center">{quant}</h1>
-                  <h1
-                    className="border border-[#d2d2d2]  w-[50%]  h-6 flex justify-center items-center hover:cursor-pointer rounded-md"
-                    onClick={increment}
-                  >
-                    +
-                  </h1>
+                <div className=" w-[10%] lg:h-[35px] h-[45px]  border border-black p-1  rounded-md">
+                  <input
+                    className="border-0 border-[#d2d2d2]  w-full  h-6   rounded-md"
+                    type="number"
+                    min={1}
+                    value={quant ||1}
+                    max={99}
+                    onChange={handleQunatity}
+                  />
+                
                 </div>
                 <button
                   className="p-1 h-[45px] lg:h-[35px] w-[170px] bg-redbtn text-center rounded-md text-white"
