@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { getProduct } from "../Api";
 import { useState, useMemo, memo, useCallback, useRef } from "react";
+import withCart from "./WithCart";
 
 function CartMain({ cart, setCart }) {
   const [products, setProducts] = useState([]);
@@ -214,4 +215,4 @@ function CouponRow({ cart, updateCart }) {
   );
 }
 
-export default CartMain;
+export default withCart(CartMain);

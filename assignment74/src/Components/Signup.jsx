@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import { Button } from "./Login";
 import Input from "./NormalInput";
 import axios from "axios";
+import withUser from "./WithUser";
 
 function handleSignup(values, bag) {
   axios
@@ -160,4 +161,4 @@ function SignUpPage({
 
 const SignUp = myHOC(SignUpPage);
 
-export default SignUp;
+export default withUser(SignUp);

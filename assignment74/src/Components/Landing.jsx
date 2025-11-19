@@ -106,6 +106,7 @@ function Sort({ sort, setSort }) {
     <>
       <div className="h-[60px] pt-2 mt-2 mx-10 flex justify-end  ">
         <select
+        id="selectID"
           value={sort}
           onChange={(e) => setSort(e.target.value)}
           className="bg-[#ebebeb] h-[80%] w-[180px] rounded-xl p-1 border-0"

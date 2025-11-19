@@ -1,4 +1,5 @@
 import { Navigate } from "react-router-dom";
+import withUser from "./WithUser";
 
 function ProtectedRoute({user, children}){
     if(!user){
@@ -7,4 +8,4 @@ function ProtectedRoute({user, children}){
     return children;
 }
 
-export default ProtectedRoute;
+export default withUser(ProtectedRoute);

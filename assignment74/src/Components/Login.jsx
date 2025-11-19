@@ -6,6 +6,9 @@ import { Link } from "react-router-dom";
 import Input from "./NormalInput";
 import axios from "axios";
 import { MdAlternateEmail } from "react-icons/md";
+import withUser from "./WithUser";
+import { UserContext } from "../App";
+import { useContext } from "react";
 
 function handleLogin(values, bag) {
   axios
@@ -45,6 +48,26 @@ export function Loginform({
   handleChange,
   handleBlur,
 }) {
+  const { user, setUser } = useContext(UserContext);
+  function handleLogOut(){
+    setUser(null);
+    localStorage.removeItem('token');
+  }
+  if (user) {
+    return (
+      <>
+        <div className="h-auto  w-full bg-backgrey flex items-center justify-center py-10 flex-grow">
+          <div className="min-h-[80vh] max-h-[80vh]  min-w-[80vw] bg-[blue] bg-cover flex flex-col items-center py-4 gap-10 rounded-3xl justify-center">
+            <div className="flex gap-2 flex-col items-center justify-center">
+            <h1 className="text-white text-xl">User Logged In</h1>
+            <h1 className="text-white text-3xl">{user.firstName}</h1>
+            </div>
+            <Button onClick={handleLogOut} >Log Out</Button>
+          </div>
+        </div>
+      </>
+    );
+  }
   return (
     <>
       <div className="h-auto  w-full bg-backgrey flex items-center justify-center py-10 flex-grow">
@@ -126,4 +149,4 @@ export function Button({ children, className, disabled, ...rest }) {
 
 const Login = myHOC(Loginform);
 
-export default Login;
+export default withUser(Login);

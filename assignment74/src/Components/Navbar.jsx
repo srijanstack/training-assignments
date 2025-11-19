@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { memo, useMemo } from "react";
 import { CiUser, CiShoppingCart, CiSearch } from "react-icons/ci";
 import  Input  from "./NormalInput";
+import withCart from "./WithCart";
 
 function Navbar({ setQuery, cart }) {
   const totalItem = useMemo(() => {
@@ -20,6 +21,7 @@ function Navbar({ setQuery, cart }) {
         </Link>
         <div className="flex gap-2 md:gap-3 w-[50%] md:w-[40%] items-center h-full ">
           <input
+            id="navInput"
             placeholder="Search"
             className="w-[80%] min-w-[100px] border h-[70%] md:min-w-[250px] md:h-[75%] rounded-4xl p-4 bg-[#ebebeb] text-black "
             onChange={(e) => setQuery(e.target.value)}
@@ -41,4 +43,4 @@ function Navbar({ setQuery, cart }) {
   );
 }
 
-export default memo(Navbar);
+export default memo(withCart(Navbar));

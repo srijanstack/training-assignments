@@ -12,7 +12,10 @@ import Forgor from "./Components/Forgotpassword";
 import axios from "axios";
 import AuthRoute from "./Components/Authroute";
 import ProtectedRoute from "./Components/ProtectedRoute";
-import  Loading from "./Components/Loading"
+import Loading from "./Components/Loading";
+
+export const UserContext = createContext();
+export const CartContext = createContext();
 
 function App() {
   const [query, setQuery] = useState("");
@@ -21,6 +24,7 @@ function App() {
     return saved ? JSON.parse(saved) : {};
   });
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const token = localStorage.getItem("token");
 
@@ -34,8 +38,14 @@ function App() {
         })
         .then((res) => {
           setUser(res.data.user);
+          setLoading(false);
         })
-        .catch((err) => console.log("Login first", err));
+        .catch((err) => {
+          console.log("Login first", err);
+          setLoading(false);
+        });
+    } else {
+      setLoading(false);
     }
   }, []);
 
@@ -43,64 +53,78 @@ function App() {
     console.log(user);
   }, [user]);
 
+  if (loading) {
+    return (
+      <>
+        <div className="w-[100vw] h-[100vh] flex items-center justify-center">
+          <Loading />
+        </div>
+      </>
+    );
+  }
+
   return (
     <>
       <div className="min-h-screen flex flex-col">
-        <Navbar setQuery={setQuery} cart={cart} />
+        <UserContext.Provider value={{ user, setUser }}>
+          <CartContext.Provider value={{ cart, setCart }}>
+            <Navbar setQuery={setQuery}  />
 
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <ProtectedRoute user={user}>
-                <Landing query={query} />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/products/:sku"
-            element={
-              <ProtectedRoute>
-                <Details setCart={setCart} cart={cart} />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/cart"
-            element={
-              <ProtectedRoute>
-                <CartMain cart={cart} setCart={setCart} />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/login"
-            element={
-              <AuthRoute user={user}>
-                <Login setUser={setUser} />
-              </AuthRoute>
-            }
-          />
-          <Route
-            path="/signup"
-            element={
-              <AuthRoute>
-                <SignUp setUser={setUser} />
-              </AuthRoute>
-            }
-          />
-          <Route
-            path="/forgot"
-            element={
-              <AuthRoute>
-                <Forgor />
-              </AuthRoute>
-            }
-          />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+            <Routes>
+              <Route
+                path="/"
+                element={
+                  <ProtectedRoute>
+                    <Landing query={query} />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/products/:sku"
+                element={
+                  <ProtectedRoute>
+                    <Details   />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/cart"
+                element={
+                  <ProtectedRoute>
+                    <CartMain  />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/login"
+                element={
+             
+                    <Login />
+           
+                }
+              />
+              <Route
+                path="/signup"
+                element={
+                  <AuthRoute>
+                    <SignUp />
+                  </AuthRoute>
+                }
+              />
+              <Route
+                path="/forgot"
+                element={
+                  <AuthRoute>
+                    <Forgor />
+                  </AuthRoute>
+                }
+              />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
 
-        <Footer />
+            <Footer />
+          </CartContext.Provider>
+        </UserContext.Provider>
       </div>
     </>
   );

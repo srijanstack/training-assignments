@@ -5,6 +5,7 @@ import { AiOutlineArrowRight, AiOutlineArrowLeft } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import Loading from "./Loading";
 import { Button } from "./Login";
+import withCart from "./WithCart";
 
 function Details({ setCart, cart }) {
   const [quant, setQuant] = useState(1);
@@ -119,4 +120,4 @@ function Details({ setCart, cart }) {
   );
 }
 
-export default Details;
+export default withCart(Details);
