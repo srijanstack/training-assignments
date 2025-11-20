@@ -1,0 +1,10 @@
+@import 'tailwindcss';
+
+@theme{
+  --color-redbtn: #ff4848;
+  --color-backgrey: #e0e0e0;
+}
+
+:root{
+  font-family:  sans-serif;
+}
