@@ -59,6 +59,7 @@ function Details({ setCart, cart }) {
               className="lg:w-[45%] lg:h-full h-[55%] "
               src={product.thumbnail}
               alt="product"
+              loading="lazy"
             />
             <div className="lg:w-[50%]  w-full lg:py-2 p-0">
               <h1 className="lg:text-[1.9rem] text-[2rem] font-medium">

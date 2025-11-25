@@ -1,16 +1,40 @@
 import axios from "axios";
 
+export function getData(obj) {
+  const { sort, query, page } = obj;
 
-export function getData(){
-const res = axios.get('https://dummyjson.com/products');
-return res.then(res=>res.data.products);
+  let sortBy = sort;
+  let skip = 20 * (page - 1);
+  let search = query;
+  let order = "asc";
+
+  if (sort == "price2") {
+    order = "desc";
+    sortBy = "price";
+  }
+
+  if (sort == "title2") {
+    order = "desc";
+    sortBy = "title";
+  }
+
+  if(query != ""){
+   const res = axios.get(
+    `https://dummyjson.com/products/search?q=${search}&limit=20&sortBy=${sortBy}&order=${order}&skip=${skip}`
+  );
+  return res.then((res) => res.data);
+  }
+
+  const res = axios.get(
+    `https://dummyjson.com/products?limit=20&sortBy=${sortBy}&order=${order}&skip=${skip}`
+  );
+  return res.then((res) => res.data);
 }
 
-export function getProduct(id){
-    const res = axios.get(`https://dummyjson.com/products/${id}`);
-    return res.then(res=>res.data);
+export function getProduct(id) {
+  const res = axios.get(`https://dummyjson.com/products/${id}`);
+  return res.then((res) => res.data);
 }
-
 
 // const Data = [
 //   {
@@ -87,7 +111,3 @@ export function getProduct(id){
 //   },
 // ];
 //export default Data;
-
-
-
-

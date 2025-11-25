@@ -5,7 +5,7 @@ function AuthRoute({ user, children }) {
   if (user === null) {
     return children;
   }
-  return <Navigate to="/" />;
+  return <Navigate to="/products" />;
 }
 
 export default withUser(AuthRoute);

@@ -4,7 +4,7 @@ import { CiUser, CiShoppingCart, CiSearch } from "react-icons/ci";
 import {withCart} from "./HOC/WithPorvider";
 import { withQuery } from "./HOC/WithPorvider";
 
-function Navbar({ setQuery, cart }) {
+function Navbar({ handleQuery, cart }) {
   const totalItem = useMemo(() => {
     return Object.values(cart).reduce((a, c) => a + c, 0);
   }, [cart]);
@@ -24,7 +24,7 @@ function Navbar({ setQuery, cart }) {
             id="navInput"
             placeholder="Search"
             className="w-[80%] min-w-[100px] border h-[70%] md:min-w-[250px] md:h-[75%] rounded-4xl p-4 bg-[#ebebeb] text-black "
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={(e) => handleQuery(e.target.value)}
           />
           <Link to="/cart">
             <div className="relative rounded-[50%] flex items-cener justify-center bg-gray-200 p-3 ">

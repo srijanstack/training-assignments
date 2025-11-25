@@ -29,7 +29,7 @@ function App() {
 
                 <Routes>
                   <Route
-                    path="/"
+                    path="/products"
                     element={
                       <ProtectedRoute>
                         <Landing />

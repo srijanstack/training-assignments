@@ -1,66 +1,63 @@
 import stars from "../assets/black-five-rating-review-stars-png-img-70408169469774841dximozbe-removebg-preview.png";
-import { useEffect, useState, useMemo, memo } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState, useMemo, memo, use } from "react";
+import { Link, useSearchParams } from "react-router-dom";
 import { getData } from "../Api";
 import Loading from "../UI/Loading";
 import { withQuery } from "../Components/HOC/WithPorvider";
 import NoResult from "../UI/NoResult";
+import { range } from "lodash";
 
 function Landing(props) {
-  const [sort, setSort] = useState("");
-  const [productList, setProductList] = useState([]);
+  const [productData, setProductData] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const [searchParams, setSearchParams] = useSearchParams();
+  const params = Object.fromEntries([...searchParams]);
+
+  let { page, sort } = params;
+
+  page = +page || 1;
+
+  function handleSort(value) {
+    setSearchParams({ ...params, sort: value }, { replace: false });
+  }
+
+  useEffect(() => {}, [props.query]);
+
   useEffect(() => {
-    getData()
-      .then((products) => {
-        setProductList(products);
+    getData({ sort, query: props.query, page })
+      .then((data) => {
+        setProductData(data);
         setLoading(false);
       })
       .catch(() => setLoading(true));
-  }, []);
+  }, [sort, page, props.query]);
 
   return (
     <>
       <Main
-        data={productList}
+        data={productData.products}
+        pageNo={productData.total}
         query={props.query}
         sort={sort}
-        setSort={setSort}
         loading={loading}
+        page={page}
+        handleSort={handleSort}
       />
     </>
   );
 }
 
-function Main({ data, query, sort, setSort, loading }) {
-  const sortedData = useMemo(() => {
-    let filtered = data.filter((item) =>
-      item.title.toLowerCase().includes(query.toLowerCase())
-    );
-
-    if (sort === "price") {
-      return [...filtered].sort((a, b) => a.price - b.price);
-    }
-    if (sort === "price1") {
-      return [...filtered].sort((a, b) => b.price - a.price);
-    }
-    if (sort === "name") {
-      return [...filtered].sort((a, b) => a.title.localeCompare(b.title));
-    }
-
-    return filtered;
-  }, [data, query, sort]);
-
+function Main({ data, sort, loading, pageNo, page, handleSort }) {
   return (
     <>
-      <div className="w-full h-[auto] lg:h-[auto] bg-backgrey flex justify-center items-center px-10 flex-grow">
+      <div className="w-full h-[auto] lg:h-[auto] bg-backgrey flex justify-center items-center p-10 flex-grow">
         {!loading ? (
-          sortedData.length != 0 ? (
-            <div className="w-[auto]  h-[auto] my-10 bg-white ">
-              <Sort sort={sort} setSort={setSort} />
-              <div className="h-[90%] w-full grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 pb-10 px-5  gap-4 box-border ">
-                {sortedData.map((item, index) => (
+          data.length != 0 ? (
+            <div className="w-[auto] h-[auto]  bg-white ">
+              <Sort sort={sort} handleSort={handleSort} />
+              <div className="h-auto w-full grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 pb-10 px-5  gap-4 box-border ">
+                {data.map((item, index) => (
                   <Card
                     key={index}
                     img={item.thumbnail}
@@ -71,6 +68,7 @@ function Main({ data, query, sort, setSort, loading }) {
                   />
                 ))}
               </div>
+              <NextButtons pageNo={pageNo} page={page} />
             </div>
           ) : (
             <NoResult />
@@ -91,7 +89,7 @@ const Card = memo((props) => {
         <div className="w-full px-3 flex flex-col">
           <p className="text-[0.8rem] text-[#b3b3b3]">{props.category}</p>
           <h1>{props.name}</h1>
-          <img className="w-[100px]" src={stars} alt="review" />
+          <img className="w-[100px]" src={stars} loading="lazy" alt="review" />
           <h1 className="text-[0.9rem]">${props.price}</h1>
         </div>
         <Link
@@ -107,21 +105,49 @@ const Card = memo((props) => {
   );
 });
 
-function Sort({ sort, setSort }) {
+function Sort({ sort, handleSort }) {
   return (
     <>
       <div className="h-[60px] pt-2 mt-2 mx-10 flex justify-end  ">
         <select
           id="selectID"
           value={sort}
-          onChange={(e) => setSort(e.target.value)}
+          onChange={(e) => handleSort(e.target.value)}
           className="bg-[#ebebeb] h-[80%] w-[180px] rounded-xl p-1 border-0"
         >
-          <option value="">Default</option>
+          <option value="default">Default</option>
           <option value="price">Price:low to high</option>
-          <option value="price1">Price:high to low</option>
-          <option value="name">Name</option>
+          <option value="price2">Price:high to low</option>
+          <option value="title">Name:A-Z</option>
+          <option value="title2">Name:Z-A</option>
         </select>
+      </div>
+    </>
+  );
+}
+
+function NextButtons({ pageNo, page }) {
+  pageNo = Math.ceil(pageNo / 20);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const params = Object.fromEntries([...searchParams]);
+
+  return (
+    <>
+      <div className="max-w-auto  m-6 flex flex-wrap gap-3 text-white">
+        {range(1, pageNo + 1).map((i) => (
+          <Link
+            to={`?${new URLSearchParams({ ...params, page: i }).toString()}`}
+            className={
+              "h-10 w-9 cursor-pointer flex items-center justify-center rounded-md " +
+              (page != i
+                ? "bg-red-500 hover:bg-red-600 "
+                : " bg-blue-500 hover:bg-blue-600 ")
+            }
+            key={i}
+          >
+            {i}
+          </Link>
+        ))}
       </div>
     </>
   );
